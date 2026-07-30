@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
+  <title>六级词汇 · 墨水屏版</title>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700&family=Noto+Sans+SC:wght@300;400;500;600&family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,500&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/theme-word-ink.css">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="css/preview-components.css">
+  <link rel="stylesheet" href="css/tokens-base.css">
+  <link rel="stylesheet" href="css/icons.css">
+  <link rel="stylesheet" href="css/preview-theme.css">
+  <link rel="stylesheet" href="css/preview-eink.css">
+  <style>
+    .input-eink{font-family:inherit;font-size:13px;padding:6px 10px;border:1px solid #999;border-radius:4px;background:#fff;color:#000;outline:none}.input-eink:focus{border-color:#000}
+    .eink-chip-row{display:flex;gap:6px;margin:6px 0;flex-wrap:wrap}.eink-chip{display:inline-block;padding:4px 12px;font-size:12px;border:1px solid #999;border-radius:4px;background:#fff;color:#333;cursor:pointer;white-space:nowrap;user-select:none}.eink-chip.eink-chip-active,.eink-chip-active{background:#000;color:#fff;border-color:#000}.eink-empty{color:#888;text-align:center;padding:16px 0;font-size:13px}
+    .eink-stat-num{font-family:'Cormorant Garamond',serif}
+    .eink-progress-fill{background:#000}
+    .eink-list .eink-row:last-child{border-bottom:none}
+    .tab-content{display:none}.tab-content.active{display:block}
+    .word-detail-overlay{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.4);z-index:9999;display:none;align-items:center;justify-content:center}
+    .word-detail-box{background:#fff;color:#000;border:1px solid #000;max-width:400px;width:90%;padding:20px}
+    .wd-title{font-size:22px;font-weight:600}
+    .wd-phonetic{font-size:12px;color:#555;margin:4px 0}
+    .wd-def{font-size:17px;margin:8px 0;line-height:1.6}
+    .wd-eg{font-size:15px;color:#555;font-style:italic;margin:6px 0}
+    .wd-actions{display:flex;gap:6px;margin-top:12px;flex-wrap:wrap}
+    .wd-actions button{padding:6px 14px;font-size:12px;border:1px solid #000;background:#fff;color:#000;cursor:pointer}
+    .wd-actions button.wd-primary{background:#000;color:#fff}
+    select.input-eink{min-width:80px}
+    #overviewFilterPanel div{margin:4px 0}
+    @media(max-width:480px){.eink-word{font-size:24px}.eink-btn{font-size:10px;padding:5px 2px}}
+    .eink-stats{display:flex;border:1px solid #000;margin:8px 0}
+    .eink-stat{flex:1;padding:5px 2px;text-align:center;border-right:1px solid #000}
+    .eink-stat:last-child{border-right:none}
+    .eink-row{display:flex;justify-content:space-between;align-items:center;padding:7px 8px;font-size:11px;color:#000;border-bottom:1px solid #888;min-height:32px}
+    .eink-row:last-child{border-bottom:none}
+    .eink-row .eink-row-l{display:flex;align-items:center;gap:5px;overflow:hidden}
+    .eink-row .eink-row-r{font-size:10px;color:#444;flex-shrink:0}
+    .eink-list{border:1px solid #000;margin-bottom:8px}
+    .eink-grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:4px;margin-bottom:8px}
+    .eink-btn{flex:1;padding:7px 4px;font-size:11px;font-family:'Noto Serif SC',serif;cursor:pointer;background:transparent;border:1px solid #000;color:#000;border-radius:0;letter-spacing:0.05em;min-height:32px;transition:none}
+    .eink-btn-primary{background:#000;color:#fff}
+    .eink-section{font-family:'Noto Sans SC',sans-serif;font-size:9px;color:#000;letter-spacing:0.18em;text-transform:uppercase;margin:8px 0 4px;font-weight:600;border-left:3px solid #000;padding-left:5px}
+  </style>
+</head>
+<body>
+  <div class="eink-page" id="app">
+    <!-- Toast -->
+    <div id="toastContainer" style="position:fixed;top:10px;right:10px;z-index:99999"></div>
+
+    <!-- Feedback flash for card actions -->
+    <div id="feedbackFlash" class="feedback-flash"></div>
+
+    <!-- Tab Content -->
+    <!-- ========== 首页/学习 (合并) ========== -->
+    <div id="screen-home" class="tab-content active">
+      <div class="eink-version">
+        <div class="eink-version-name">墨水屏版</div>
+        <div class="eink-version-sub">六级词汇 · 研习手帖</div>
+      </div>
+      <div class="eink-word-block" id="wordCard">
+        <div class="eink-word" id="einkWord">---</div>
+        <div class="eink-phonetic" id="einkPhonetic">---</div>
+        <div class="eink-divider"></div>
+        <div class="eink-meaning" id="einkDef">---</div>
+        <div class="eink-eg" id="einkExample">---</div>
+      </div>
+      <div class="eink-stats">
+        <div class="eink-stat"><div class="eink-stat-num" id="statStreak">0</div><div class="eink-stat-lbl">连续</div></div>
+        <div class="eink-stat"><div class="eink-stat-num" id="statLearned">0</div><div class="eink-stat-lbl">词汇</div></div>
+        <div class="eink-stat"><div class="eink-stat-num">50</div><div class="eink-stat-lbl">目标</div></div>
+        <div class="eink-stat" style="border-right:none"><div class="eink-stat-num">0</div><div class="eink-stat-lbl">分钟</div></div>
+      </div>
+      <div class="eink-actions">
+        <button class="eink-btn" onclick="speakWord(currentWord.word)">🔊 发音</button>
+        <button class="eink-btn" onclick="toggleFavorite()" id="btnFavHome">☆ 收藏</button>
+        <button class="eink-btn" onclick="showNoteEditor()" id="btnNoteHome">📝 笔记</button>
+      </div>
+      <div class="eink-actions">
+        <button class="eink-btn eink-btn-primary" onclick="prevWord()">← 上一个</button>
+        <button class="eink-btn" onclick="nextWord()">下一个 →</button>
+      </div>
+      <div class="eink-actions">
+        <button class="eink-btn" onclick="markWrong()">✗ 不认识</button>
+        <button class="eink-btn eink-btn-primary" onclick="markMastered()">✓ 已掌握</button>
+      </div>
+      <div class="eink-continue" id="einkWordCount">0 / 5023</div>
+      <div class="eink-progress-track"><div class="eink-progress-fill" id="einkProgressFill" style="width:0%"></div></div>
+    </div>
+
+    <!-- ========== RECALL ========== -->
+    <div id="recall" class="tab-content">
+      <div class="eink-section">练习</div>
+      <div class="eink-chip-row">
+        <button class="eink-chip eink-chip-active" onclick="setRecallMode('reverse')" id="btnRecallReverse">释义猜词</button>
+        <button class="eink-chip" onclick="setRecallMode('spell')" id="btnRecallSpell">默写</button>
+        <button class="eink-chip" onclick="setRecallMode('match')" id="btnRecallMatch">配对</button>
+        <button class="eink-chip" onclick="setRecallMode('dictation')" id="btnRecallDictation">听写</button>
+        <button class="eink-chip" onclick="setRecallMode('challenge')" id="btnRecallChallenge">闯关</button>
+        <button class="eink-chip" onclick="setRecallMode('quiz')" id="btnRecallQuiz">选择</button>
+      </div>
+
+      <!-- Reverse -->
+      <div id="recallReverseMode" style="display:block">
+        <div class="eink-word-block">
+          <div class="eink-phonetic" id="recallPhonetic">---</div>
+          <div class="eink-meaning" id="recallDef">---</div>
+          <input type="text" class="input-eink" style="width:100%;margin-top:10px;box-sizing:border-box" placeholder="请输入对应的单词..." id="recallInput" onkeydown="if(event.key==='Enter')checkRecall()" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false">
+          <div id="recallResult" style="margin-top:6px;font-size:13px;font-weight:600"></div>
+        </div>
+        <div class="eink-actions">
+          <button class="eink-btn" onclick="checkRecall()">验证</button>
+          <button class="eink-btn" onclick="nextRecall()">下一题</button>
+        </div>
+      </div>
+
+      <!-- Match -->
+      <div id="recallMatchMode" style="display:none">
+        <div class="eink-word-block">
+          <div class="eink-phonetic" id="matchDef" style="font-size:11px;color:#555">---</div>
+          <div class="eink-chip-row" id="matchOptions" style="flex-wrap:wrap"></div>
+          <div id="matchResult" style="margin-top:6px;font-size:13px"></div>
+        </div>
+        <div class="eink-actions">
+          <button class="eink-btn" onclick="nextMatch()">下一题</button>
+        </div>
+      </div>
+
+      <!-- Dictation -->
+      <div id="recallDictationMode" style="display:none">
+        <div class="eink-word-block">
+          <div class="eink-meaning" style="font-size:10px;color:#888">听音拼写</div>
+          <input type="text" class="input-eink" style="width:100%;box-sizing:border-box" placeholder="请输入听到的单词..." id="dictationInput" onkeydown="if(event.key==='Enter')checkDictation()" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false">
+          <div id="dictationResult" style="margin-top:6px;font-size:13px"></div>
+          <div id="dictationCorrect" style="font-size:11px;color:#888"></div>
+        </div>
+        <div class="eink-actions">
+          <button class="eink-btn" onclick="playDictationAudio()">🔊 听音</button>
+          <button class="eink-btn" onclick="checkDictation()">验证</button>
+          <button class="eink-btn" onclick="nextDictation()">下一题</button>
+        </div>
+      </div>
+
+      <!-- Challenge -->
+      <div id="recallChallengeMode" style="display:none">
+        <div class="eink-word-block">
+          <div class="eink-phonetic" id="challengePhonetic" style="font-size:11px;color:#555">---</div>
+          <div class="eink-meaning" id="challengeDef" style="font-size:13px">---</div>
+          <div style="font-size:9px;color:#888;margin:3px 0"><span id="challengeTimer">60</span>s · 得分 <span id="challengeScore">0</span></div>
+          <input type="text" class="input-eink" style="width:100%;margin-top:10px;box-sizing:border-box" placeholder="请输入单词..." id="challengeInput" onkeydown="if(event.key==='Enter')checkChallenge()" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false">
+          <div id="challengeResult" style="margin-top:6px;font-size:13px;font-weight:600"></div>
+          <div style="font-size:11px;color:#888;margin-top:3px">状态：正确 <span id="challengeCorrect">0</span> 错误 <span id="challengeWrong">0</span> 正确率 <span id="challengeRate">0%</span></div>
+        </div>
+        <div class="eink-actions">
+          <button class="eink-btn eink-btn-primary" onclick="startChallenge()" id="btnStartChallenge">开始闯关</button>
+          <button class="eink-btn" onclick="checkChallenge()" id="btnCheckChallenge">验证</button>
+        </div>
+      </div>
+
+      <!-- Spell -->
+      <div id="recallSpellMode" style="display:none">
+        <div class="eink-section">默写</div>
+        <div class="eink-word-block">
+          <div class="eink-phonetic" id="spellPhonetic">---</div>
+          <div class="eink-meaning" id="spellDef">---</div>
+          <div class="eink-eg" id="spellPos"></div>
+          <input type="text" class="input-eink" style="width:100%;margin-top:10px;box-sizing:border-box" placeholder="请输入单词拼写..." id="spellInput" onkeydown="if(event.key==='Enter')checkSpell()" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false">
+          <div id="spellResult" style="margin-top:6px;font-size:13px;font-weight:600"></div>
+          <div id="spellCorrect" style="font-size:11px;color:#888"></div>
+        </div>
+        <div class="eink-actions">
+          <button class="eink-btn" onclick="nextSpell()">下一词</button>
+          <button class="eink-btn" onclick="checkSpell()">验证</button>
+          <button class="eink-btn" onclick="showHint()">提示</button>
+          <button class="eink-btn" onclick="skipSpell()">跳过</button>
+        </div>
+      </div>
+
+      <!-- Quiz -->
+      <div id="recallQuizMode" style="display:none">
+        <div class="eink-section">选择题</div>
+        <div class="eink-word-block">
+          <div class="eink-word" id="quizWord" style="font-size:22px">---</div>
+          <div class="eink-phonetic" id="quizPhonetic">---</div>
+          <div class="eink-phonetic" id="quizPos" style="font-size:10px;color:#888"></div>
+          <div class="eink-chip-row" id="quizOptions" style="flex-direction:column;gap:6px"></div>
+          <div id="quizResult" style="margin-top:6px;font-size:13px;font-weight:600"></div>
+          <div style="font-size:10px;color:#888;margin-top:3px">正确 <span id="quizCorrect">0</span> 错误 <span id="quizWrong">0</span> 正确率 <span id="quizRate">0%</span></div>
+        </div>
+        <div class="eink-actions">
+          <button class="eink-btn" onclick="nextQuiz()">下一题</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ========== ERRORS ========== -->
+    <div id="errors" class="tab-content">
+      <div class="eink-section">错词本</div>
+      <div class="eink-stats">
+        <div class="eink-stat"><div class="eink-stat-num" id="einkErrorCount">0</div><div class="eink-stat-lbl">错词</div></div>
+        <div class="eink-stat"><div class="eink-stat-num" id="errorCount" style="font-size:10px">共 0 个错词</div><div class="eink-stat-lbl">详情</div></div>
+        <div class="eink-stat" style="border-right:none"><div class="eink-stat-num" id="einkMasteryRate">100%</div><div class="eink-stat-lbl">掌握率</div></div>
+      </div>
+      <div class="eink-row"><span class="eink-row-l">搜索错词</span><span class="eink-row-r"><input type="text" class="input-eink" id="errorSearch" oninput="renderErrors()" placeholder="搜索..." style="max-width:160px"></span></div>
+      <div class="eink-section">错误次数</div>
+      <div class="eink-chip-row" id="errorCountChips">
+        <span class="eink-chip eink-chip-active" onclick="setErrorCountFilter('all',this)">全部</span>
+        <span class="eink-chip" onclick="setErrorCountFilter('1',this)">1次</span>
+        <span class="eink-chip" onclick="setErrorCountFilter('2-5',this)">2-5次</span>
+        <span class="eink-chip" onclick="setErrorCountFilter('5+',this)">5+次</span>
+      </div>
+      <div class="eink-section">时间</div>
+      <div class="eink-chip-row" id="errorTimeChips">
+        <span class="eink-chip eink-chip-active" onclick="setErrorTimeFilter('all',this)">全部</span>
+        <span class="eink-chip" onclick="setErrorTimeFilter('today',this)">今天</span>
+        <span class="eink-chip" onclick="setErrorTimeFilter('week',this)">本周</span>
+        <span class="eink-chip" onclick="setErrorTimeFilter('month',this)">本月</span>
+      </div>
+      <div class="eink-section">错词列表</div>
+      <div class="eink-list" id="errorList">
+        <p class="eink-empty">暂无错词，继续加油！</p>
+      </div>
+      <div class="eink-actions">
+        <button class="eink-btn" onclick="reviewErrors()">复习错词</button>
+        <button class="eink-btn" onclick="exportErrorWords()">导出错词</button>
+        <button class="eink-btn" onclick="clearErrorWords()">清空错词</button>
+      </div>
+    </div>
+
+    <!-- ========== OVERVIEW ========== -->
+    <div id="overview" class="tab-content">
+      <div class="eink-section">词典</div>
+      <div class="eink-row"><span class="eink-row-l">搜索</span><span class="eink-row-r"><input type="text" class="input-eink" id="overviewSearch" oninput="renderOverview()" placeholder="搜索单词或释义..." style="max-width:200px"></span></div>
+      <div class="eink-chip-row">
+        <span class="eink-chip" onclick="toggleOverviewFilter()" id="overviewFilterToggle">筛选与排序 ▾</span>
+      </div>
+      <div id="overviewFilterPanel" style="display:none">
+        <div class="eink-section">按状态</div>
+        <div class="eink-chip-row" id="overviewStatusChips">
+          <span class="eink-chip eink-chip-active" onclick="setOverviewStatus('all',this)">全部</span>
+          <span class="eink-chip" onclick="setOverviewStatus('new',this)">未学习</span>
+          <span class="eink-chip" onclick="setOverviewStatus('mastered',this)">已掌握</span>
+          <span class="eink-chip" onclick="setOverviewStatus('wrong',this)">错词</span>
+          <span class="eink-chip" onclick="setOverviewStatus('favorite',this)">已收藏</span>
+        </div>
+        <div class="eink-section">按难度</div>
+        <div class="eink-chip-row" id="overviewDiffChips">
+          <span class="eink-chip eink-chip-active" onclick="setOverviewDiff('all',this)">全部</span>
+          <span class="eink-chip" onclick="setOverviewDiff('easy',this)">简单</span>
+          <span class="eink-chip" onclick="setOverviewDiff('medium',this)">中等</span>
+          <span class="eink-chip" onclick="setOverviewDiff('hard',this)">困难</span>
+        </div>
+        <div class="eink-section">排序</div>
+        <div class="eink-chip-row" id="overviewSortChips">
+          <span class="eink-chip eink-chip-active" onclick="setOverviewSort('abc',this)">A-Z</span>
+          <span class="eink-chip" onclick="setOverviewSort('reverse',this)">Z-A</span>
+          <span class="eink-chip" onclick="setOverviewSort('status',this)">按状态</span>
+        </div>
+        <div class="eink-section">首字母</div>
+        <div class="eink-chip-row" id="overviewLetterChips">
+          <span class="eink-chip eink-chip-active" onclick="setOverviewLetter('all',this)">全部</span>
+        </div>
+      </div>
+      <div style="font-size:10px;color:#888;margin:4px 0"><span id="overviewCount">--</span></div>
+      <div class="eink-list" id="overviewList">
+        <p class="eink-empty">加载中...</p>
+      </div>
+    </div>
+
+    <!-- ========== NOTES ========== -->
+    <div id="notes" class="tab-content">
+      <div class="eink-section">笔记</div>
+      <div class="eink-row"><span class="eink-row-l">搜索笔记</span><span class="eink-row-r"><input type="text" class="input-eink" id="notesSearch" oninput="renderNotesList()" placeholder="搜索..." style="max-width:200px"></span></div>
+      <div style="font-size:10px;color:#888;margin:4px 0"><span id="notesCount">0 条笔记</span></div>
+      <div class="eink-list" id="notesList">
+        <p class="eink-empty">暂无笔记</p>
+      </div>
+    </div>
+
+    <!-- ========== STATS ========== -->
+    <div id="stats" class="tab-content">
+      <div class="eink-section">统计</div>
+      <div class="eink-stats">
+        <div class="eink-stat"><div class="eink-stat-num" id="statTotal">5023</div><div class="eink-stat-lbl">总词汇</div></div>
+        <div class="eink-stat"><div class="eink-stat-num" id="statMastered">0</div><div class="eink-stat-lbl">已掌握</div></div>
+        <div class="eink-stat"><div class="eink-stat-num" id="statWrong">0</div><div class="eink-stat-lbl">错词</div></div>
+        <div class="eink-stat" style="border-right:none"><div class="eink-stat-num" id="statTime">0</div><div class="eink-stat-lbl">分钟</div></div>
+      </div>
+      <div class="eink-stats">
+        <div class="eink-stat"><div class="eink-stat-num" id="statToday">0</div><div class="eink-stat-lbl">今日</div></div>
+        <div class="eink-stat"><div class="eink-stat-num" id="statTodayGoal">50</div><div class="eink-stat-lbl">目标</div></div>
+        <div class="eink-stat" onclick="showStatDetail('streak')"><div class="eink-stat-num" id="statsStreak">0</div><div class="eink-stat-lbl">连续</div></div>
+      </div>
+
+      <div class="eink-section">打卡</div>
+      <div class="eink-row"><span class="eink-row-l">连续 <b id="checkinStreak">0</b> 天</span><span class="eink-row-r"><span class="eink-chip" id="checkinBtn" onclick="doCheckin()"><span id="checkinIcon">✓</span></span></span></div>
+      <div id="checkinHistory" style="font-size:10px;color:#888"></div>
+
+      <div class="eink-section">排行榜</div>
+      <div class="eink-list" id="leaderboardList"><p class="eink-empty">加载中...</p></div>
+
+      <div class="eink-section">学习洞察</div>
+      <div class="eink-list" id="learningInsights"><p class="eink-empty">加载中...</p></div>
+
+      <div class="eink-section">效率分析</div>
+      <div class="eink-list" id="efficiencyAnalysis"><p class="eink-empty">加载中...</p></div>
+
+      <div class="eink-section">学习路径</div>
+      <div class="eink-list" id="learningPath"><p class="eink-empty">加载中...</p></div>
+
+      <div class="eink-section">掌握度</div>
+      <div style="text-align:center;margin:8px 0">
+        <svg width="100" height="100" viewBox="0 0 120 120" style="transform:rotate(-90deg)">
+          <circle cx="60" cy="60" r="50" fill="none" stroke="#ddd" stroke-width="8"/>
+          <circle id="progressRing" cx="60" cy="60" r="50" fill="none" stroke="#000" stroke-width="8" stroke-dasharray="0 100" stroke-linecap="round"/>
+        </svg>
+        <div style="font-size:20px;font-weight:700;margin-top:-80px" id="progressPercent">0%</div>
+        <div style="font-size:10px;color:#888;margin-top:60px" id="progressDetail">已掌握 0 / 5023</div>
+        <div style="font-size:10px;color:#888" id="progressRemaining">剩余 5023</div>
+      </div>
+
+      <div class="eink-section">难度分布</div>
+      <div class="eink-stats">
+        <div class="eink-stat"><div class="eink-stat-num" id="statEasy">0</div><div class="eink-stat-lbl">简单</div></div>
+        <div class="eink-stat"><div class="eink-stat-num" id="statMedium">0</div><div class="eink-stat-lbl">中等</div></div>
+        <div class="eink-stat" style="border-right:none"><div class="eink-stat-num" id="statHard">0</div><div class="eink-stat-lbl">困难</div></div>
+      </div>
+
+      <div class="eink-section">学习量</div>
+      <div class="eink-chip-row">
+        <span class="eink-chip eink-chip-active" onclick="setChartRange(7)" id="btnChart7">7天</span>
+        <span class="eink-chip" onclick="setChartRange(30)" id="btnChart30">30天</span>
+      </div>
+      <div style="font-size:11px;font-weight:600;margin:4px 0" id="chartTitle">近7天学习量</div>
+      <div id="chartDetail" style="display:none;font-size:10px;color:#888;margin-bottom:4px"></div>
+      <div id="weeklyChart" style="display:flex;align-items:flex-end;height:100px;gap:2px;padding:6px 0;border:1px solid #000">加载中...</div>
+
+      <div class="eink-section">每日挑战</div>
+      <div class="eink-list" id="dailyChallenges"><p class="eink-empty">加载中...</p></div>
+
+      <div class="eink-section">连续天数</div>
+      <div id="streakCalendar" style="font-size:10px;color:#888"></div>
+      <div id="checkinProgress" style="font-size:10px;color:#888"></div>
+      <div id="checkinStatus" style="font-size:10px;color:#888"></div>
+
+      <div class="eink-section">弱点分析</div>
+      <div class="eink-list" id="weaknessAnalysis"><p class="eink-empty">加载中...</p></div>
+
+      <div style="text-align:center;margin-top:8px">
+        <button class="eink-btn" style="display:inline-block;width:auto;padding:5px 14px" onclick="shareStats()">分享统计</button>
+      </div>
+    </div>
+
+    <!-- ========== SETTINGS ========== -->
+    <div id="settings" class="tab-content">
+      <div class="eink-section">学习设置</div>
+      <div class="eink-list">
+        <div class="eink-row"><span class="eink-row-l">每日目标</span><span class="eink-row-r"><input type="number" class="input-eink" id="dailyGoal" value="50" min="5" max="500" style="max-width:80px;text-align:center"></span></div>
+        <div class="eink-row"><span class="eink-row-l">提醒时间</span><span class="eink-row-r"><input type="time" class="input-eink" id="reminderTime" value="09:00" style="max-width:100px"></span></div>
+        <div class="eink-row"><span class="eink-row-l">提醒</span><span class="eink-row-r"><input type="checkbox" id="reminderEnabled"></span></div>
+        <div class="eink-row"><span class="eink-row-l">自动备份</span><span class="eink-row-r"><input type="checkbox" id="autoBackupEnabled"> <span id="autoBackupLabel" style="font-size:10px;color:#888">已关闭</span></span></div>
+      </div>
+
+      <div class="eink-section">发音设置</div>
+      <div class="eink-list">
+        <div class="eink-row"><span class="eink-row-l">自动朗读</span><span class="eink-row-r"><input type="checkbox" id="autoReadToggle"> <span id="autoReadLabel" style="font-size:10px;color:#888">关闭</span></span></div>
+        <div class="eink-row"><span class="eink-row-l">口音</span><span class="eink-row-r"><select class="input-eink" id="accentSelect" onchange="setAccent(this.value)"><option value="en-us">美式</option><option value="en-gb">英式</option></select></span></div>
+        <div class="eink-row"><span class="eink-row-l">语速</span><span class="eink-row-r"><input type="range" min="0.5" max="2" step="0.1" id="rateSlider" oninput="setRate(this.value)" style="max-width:100px"> <span id="rateValue" style="font-size:10px;color:#888;min-width:30px;display:inline-block">1.0</span></span></div>
+      </div>
+
+      <div class="eink-section">显示设置</div>
+      <div class="eink-list">
+        <div class="eink-row"><span class="eink-row-l">字号</span><span class="eink-row-r"><select class="input-eink" id="fontSizeSelect" onchange="setFontSize(this.value)"><option value="14">小</option><option value="16" selected>中</option><option value="18">大</option></select></span></div>
+        <div class="eink-row"><span class="eink-row-l">卡片样式</span><span class="eink-row-r"><select class="input-eink" id="cardStyleSelect" onchange="setCardStyle(this.value)"><option value="classic">经典</option><option value="modern">现代</option><option value="minimal">简约</option></select></span></div>
+        <div class="eink-row"><span class="eink-row-l">背景主题</span><span class="eink-row-r"><select class="input-eink" id="v27-theme-settings-eink" onchange="setV27Theme(this.value)"><option value="eink">墨水屏</option><option value="solid-cream">奶油</option><option value="solid-paper">纸色</option><option value="solid-ivory">象牙</option><option value="solid-sand">沙色</option><option value="solid-mist">薄雾</option><option value="solid-stone">石色</option><option value="solid-clay">陶土</option><option value="solid-ash">灰烬</option><option value="grad-warm">暖</option><option value="grad-sunset">日落</option><option value="grad-forest">森林</option><option value="grad-ocean">海洋</option><option value="grad-mono">单色</option><option value="grad-paper">纸渐</option><option value="grad-mint">薄荷</option><option value="grad-rose">玫瑰</option><option value="paper-1">纸1</option><option value="paper-2">纸2</option><option value="paper-3">纸3</option><option value="paper-4">纸4</option><option value="paper-5">纸5</option><option value="paper-6">纸6</option><option value="portrait-1">竖1</option><option value="portrait-2">竖2</option><option value="portrait-3">竖3</option><option value="portrait-4">竖4</option><option value="portrait-5">竖5</option><option value="portrait-6">竖6</option><option value="portrait-7">竖7</option><option value="portrait-8">竖8</option><option value="portrait-9">竖9</option><option value="portrait-10">竖10</option><option value="portrait-11">竖11</option><option value="portrait-12">竖12</option><option value="portrait-13">竖13</option><option value="portrait-14">竖14</option></select></span></div>
+        <div class="eink-row"><span class="eink-row-l">屏幕方向</span><span class="eink-row-r"><select class="input-eink" id="orientationSelect"><option value="auto">自动</option><option value="portrait">竖屏</option><option value="landscape">横屏</option></select> <button class="eink-btn eink-btn-outline" onclick="applyOrientation()" style="font-size:11px">应用</button></span></div>
+      </div>
+
+      <div class="eink-section">成就</div>
+      <div class="eink-list" id="achievementList"><p class="eink-empty">加载中...</p></div>
+
+      <div class="eink-section">数据管理</div>
+      <div class="eink-actions" style="flex-wrap:wrap">
+        <button class="eink-btn" onclick="exportData('json')">导出 JSON</button>
+        <button class="eink-btn" onclick="exportData('csv')">导出 CSV</button>
+        <button class="eink-btn" onclick="exportData('md')">导出 Markdown</button>
+        <button class="eink-btn" onclick="exportFavorites()">导出收藏</button>
+        <button class="eink-btn" onclick="document.getElementById('importFileInput').click()">导入数据</button>
+        <input type="file" id="importFileInput" accept=".json" style="display:none" onchange="importData(event)">
+        <button class="eink-btn" onclick="backupData()" id="backupStatus">备份数据</button>
+        <button class="eink-btn" onclick="resetAllData()">重置所有数据</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Word Detail Popup (across all tabs) -->
+  <div id="wordDetailPopup" class="word-detail-overlay" onclick="if(event.target===this)closeWordDetail()" style="display:none">
+    <div class="word-detail-box" onclick="event.stopPropagation()">
+      <div class="wd-title" id="wdWord">---</div>
+      <div class="wd-phonetic" id="wdPhonetic"></div>
+      <div class="wd-phonetic" id="wdPos" style="font-size:10px;color:#888"></div>
+      <div class="wd-def" id="wdDef"></div>
+      <div class="wd-eg" id="wdExample"></div>
+      <div class="wd-actions">
+        <button onclick="speakWordFromDetail()">🔊 发音</button>
+        <button id="wdFavBtn" onclick="toggleFavFromDetail()">☆ 收藏</button>
+        <button onclick="markMasteredFromDetail()">✓ 掌握</button>
+        <button onclick="markWrongFromDetail()">✗ 不认识</button>
+        <button onclick="showDetailNoteEditor()" class="wd-primary">📝 笔记</button>
+        <button onclick="closeWordDetail()" class="wd-primary" style="margin-left:auto">关闭</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="loading" style="display:none"><p id="loadingText">加载中...</p></div>
+  <!-- Hidden elements for standard JS compatibility -->
+  <div id="compatHidden" style="display:none">
+  <div style="display:none" id="wordDisplay"></div>
+  <div style="display:none" id="phoneticDisplay"></div>
+  <div style="display:none" id="defDisplay"></div>
+  <div style="display:none" id="exampleDisplay"></div>
+  <div style="display:none" id="posDisplay"></div>
+  <div style="display:none" id="posDisplay"></div>
+  <div style="display:none" id="wordIndex"></div>
+  <div style="display:none" id="memorizeProgress"></div>
+  <div style="display:none" id="btnToggleDef"></div>
+  <div style="display:none" id="btnFavorite"></div>
+  <div style="display:none" id="btnNote"></div>
+  <div style="display:none" id="notePreview"></div>
+  <div style="display:none" id="noteIndicator"></div>
+  <div style="display:none" id="dailyGoalBar"><span id="dailyGoalText">0/50</span><div id="dailyGoalProgress"></div></div>
+  <div style="display:none" id="reviewModeBar"></div><div style="display:none" id="pomodoroBar"></div>
+  <div style="display:none" id="fontSizeSlider"></div>
+  <div style="display:none" id="fontSizeValue"></div>
+  <div style="display:none" id="btnReview"></div>
+  <div style="display:none" id="btnFocusMode"></div>
+  <div style="display:none" id="btnPomodoro"></div>
+  <div style="display:none" id="btnPomodoroPause"></div>
+  <div style="display:none" id="swipeLeft"></div>
+  <div style="display:none" id="swipeRight"></div>
+  <div style="display:none" id="mobileMenu"></div>
+  <div style="display:none" id="customVocabCount"></div>
+  <div style="display:none" id="checkinHistory"></div>
+  <div style="display:none" id="checkinProgress"></div>
+  <div style="display:none" id="checkinStatus"></div>
+  <div style="display:none" id="dailyTrend"></div>
+  <div style="display:none" id="masteryChart"></div>
+  <div style="display:none" id="pomodoroLabel"></div>
+  <div style="display:none" id="pomodoroTime"></div>
+  <div style="display:none" id="recallChallengeMode"></div>
+  <div style="display:none" id="recallDictationMode"></div>
+  <div style="display:none" id="recallMatchMode"></div>
+  <div style="display:none" id="recallReverseMode"></div>
+  <div style="display:none" id="reviewModeCount"></div>
+  <div style="display:none" id="reviewModeLabel"></div>
+  <div style="display:none" id="statDetailContent"></div>
+  <div style="display:none" id="statDetailPanel"></div>
+  <div style="display:none" id="statDetailTitle"></div>
+  <div style="display:none" id="streakCalendar"></div>
+  <div style="display:none" id="streakCount"></div>
+  </div>
+
+  <!-- Tabbar -->
+  <div class="wd1-tabbar" style="position:fixed;bottom:0;left:0;right:0;display:flex;background:#f5f2ed;border-top:1px solid #000;z-index:999;overflow-x:auto;white-space:nowrap">
+    <button data-screen="screen-home" style="flex:1;min-width:40px;padding:6px 2px;border:none;background:transparent;font-family:'Noto Serif SC',serif;font-size:11px;color:#000;cursor:pointer" onclick="switchTab('screen-home')">首页</button>
+    <button data-screen="recall" style="flex:1;min-width:40px;padding:6px 2px;border:none;background:transparent;font-family:'Noto Serif SC',serif;font-size:11px;color:#000;cursor:pointer" onclick="switchTab('recall')">练习</button>
+    <button data-screen="errors" style="flex:1;min-width:40px;padding:6px 2px;border:none;background:transparent;font-family:'Noto Serif SC',serif;font-size:11px;color:#000;cursor:pointer" onclick="switchTab('errors')">错词</button>
+    <button data-screen="overview" style="flex:1;min-width:40px;padding:6px 2px;border:none;background:transparent;font-family:'Noto Serif SC',serif;font-size:11px;color:#000;cursor:pointer" onclick="switchTab('overview')">词典</button>
+    <button data-screen="notes" style="flex:1;min-width:40px;padding:6px 2px;border:none;background:transparent;font-family:'Noto Serif SC',serif;font-size:11px;color:#000;cursor:pointer" onclick="switchTab('notes')">笔记</button>
+    <button data-screen="stats" style="flex:1;min-width:40px;padding:6px 2px;border:none;background:transparent;font-family:'Noto Serif SC',serif;font-size:11px;color:#000;cursor:pointer" onclick="switchTab('stats')">统计</button>
+    <button data-screen="settings" style="flex:1;min-width:40px;padding:6px 2px;border:none;background:transparent;font-family:'Noto Serif SC',serif;font-size:11px;color:#000;cursor:pointer" onclick="switchTab('settings')">设置</button>
+  </div>
+
+  <script>window.$ = window.$ || function(id) { return document.getElementById(id); };</script>
+  <script src="data/cet6-words.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
