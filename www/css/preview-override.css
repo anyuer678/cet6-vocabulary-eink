@@ -1,0 +1,144 @@
+/* ============================================================
+   preview-override.css — 预览版视觉系统移植层
+   加载顺序：在所有项目 CSS 之后、preview-theme.css 之前
+   作用：
+   1. 覆盖默认调色板为预览版暖色调（覆盖 Word 的紫色等旧主题）
+   2. 添加玻璃拟态 / 纸纹质感工具类
+   3. 设置 body 默认背景以配合 data-theme 切换
+   ============================================================ */
+
+/* === 1. 默认调色板覆盖（暖橄榄 + 米色系） === */
+:root {
+  /* 主色 — 暖橄榄绿 */
+  --primary:            #5a6b3a;
+  --primary-light:      #eef2e6;
+  --primary-dark:       #3d4a25;
+  --primary-gradient:   linear-gradient(135deg, #6b7d4a 0%, #5a6b3a 100%);
+
+  /* 语义色 */
+  --success:            #5a8a4a;
+  --success-light:      #ecf5e8;
+  --danger:             #b85450;
+  --danger-light:       #fdf0ef;
+  --warning:            #c8956a;
+  --warning-light:      #fdf5ed;
+  --info:               #6a8a9a;
+  --info-light:         #edf2f5;
+
+  /* 背景 */
+  --bg:                 #faf8f2;
+  --bg-page:            #faf8f2;
+  --bg-card:            rgba(255,255,255,0.82);
+  --bg-card-solid:      #faf5e8;
+  --bg-input:           rgba(255,255,255,0.6);
+
+  /* 文字 */
+  --text:               #2e2b24;
+  --text-primary:       #2e2b24;
+  --text-secondary:     #6b5e4e;
+  --text-muted:         #9a9485;
+
+  /* 边框 */
+  --border:             rgba(0,0,0,0.08);
+  --border-light:       rgba(0,0,0,0.04);
+
+  /* 阴影 — 暖色调底 */
+  --shadow-xs:          0 1px 2px rgba(60,50,30,0.04);
+  --shadow-sm:          0 1px 3px rgba(60,50,30,0.06);
+  --shadow-md:          0 4px 8px rgba(60,50,30,0.08);
+  --shadow-lg:          0 8px 24px rgba(60,50,30,0.10);
+  --shadow-xl:          0 16px 32px rgba(60,50,30,0.12);
+  --shadow-primary:     0 8px 24px rgba(90,107,58,0.25);
+}
+
+/* === 2. body 默认外观 === */
+body {
+  background: var(--bg, #faf8f2);
+  background-attachment: fixed;
+  color: var(--text-primary, #2e2b24);
+}
+
+/* body::before 暖色氛围光 */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  background-image:
+    radial-gradient(circle at 20% 30%, rgba(201,163,92,0.05) 0, transparent 30%),
+    radial-gradient(circle at 80% 70%, rgba(90,107,58,0.05) 0, transparent 30%);
+}
+
+/* === 3. 玻璃拟态面板 === */
+.glass-panel {
+  background: rgba(255,255,255,0.72) !important;
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255,255,255,0.5);
+  border-radius: 16px;
+  box-shadow: 0 4px 20px rgba(60,50,30,0.06);
+}
+.glass-panel-sm {
+  background: rgba(255,255,255,0.65) !important;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255,255,255,0.4);
+  border-radius: 12px;
+  box-shadow: 0 2px 12px rgba(60,50,30,0.04);
+}
+
+/* 玻璃导航栏 */
+.glass-nav {
+  background: rgba(255,255,255,0.75) !important;
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-bottom: 1px solid rgba(0,0,0,0.06);
+}
+
+/* 玻璃底部导航 */
+.glass-tabbar {
+  background: rgba(255,255,255,0.80) !important;
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-top: 1px solid rgba(0,0,0,0.06);
+}
+
+/* === 4. 卡片增强 === */
+.card, .glass-panel {
+  background: var(--bg-card, rgba(255,255,255,0.82));
+  border: 1px solid var(--border, rgba(0,0,0,0.06));
+  border-radius: 16px;
+  box-shadow: var(--shadow-sm);
+  transition: box-shadow 0.3s var(--ease-out, ease), transform 0.3s var(--ease-out, ease);
+}
+.card:hover {
+  box-shadow: var(--shadow-md);
+}
+
+/* === 5. 按钮适配暖色调 === */
+.btn-primary {
+  background: var(--primary, #5a6b3a) !important;
+  color: #fff !important;
+}
+.btn-primary:hover {
+  background: var(--primary-dark, #3d4a25) !important;
+}
+
+/* === 6. 输入框玻璃化 === */
+input[type="text"],
+input[type="search"],
+input[type="number"],
+textarea,
+select {
+  background: var(--bg-input, rgba(255,255,255,0.6));
+  border: 1px solid var(--border, rgba(0,0,0,0.08));
+  border-radius: 12px;
+  color: var(--text-primary, #2e2b24);
+}
+
+/* === 7. 主题切换过渡 === */
+body, .card, .glass-panel, .glass-nav, .glass-tabbar,
+input, button, select, textarea {
+  transition: background 0.4s ease, border-color 0.4s ease, color 0.4s ease;
+}

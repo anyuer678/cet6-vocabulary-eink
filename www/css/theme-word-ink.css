@@ -1,0 +1,87 @@
+/* =========================================================
+ * 主题 — Word 墨水屏版（墨卷低语）
+ * 纯粹专注的背词体验
+ * 母题：水墨、宣纸、楷体、印章、留白
+ * ========================================================= */
+
+[data-theme="word-ink"],
+html[data-theme="word-ink"] {
+  --bg-page: #F5F1E8;
+  --bg-card: #FFFFFF;
+  --bg-card-2: #FAF6EE;
+  --primary: #1A1A1A;
+  --primary-dark: #000000;
+  --primary-light: #4A4A4A;
+  --accent: #8B2A1F;
+  --accent-dark: #6B1F18;
+  --accent-light: #B8453A;
+  --tab-active: #1A1A1A;
+  --tab-active-bg: rgba(26, 26, 26, 0.06);
+  --text-primary: #1A1A1A;
+  --text-secondary: #666666;
+  --text-muted: #999999;
+  --text-disabled: #C5C5C5;
+  --border: #E5E5E5;
+  --border-soft: #EEEEEE;
+  --border-strong: #999999;
+  --divider: #E5E5E5;
+  --rate-unknown-bg: transparent;
+  --rate-unknown-text: #666666;
+  --rate-unknown-border: #C5C5C5;
+  --rate-vague-bg: transparent;
+  --rate-vague-text: #4A4A4A;
+  --rate-vague-border: #999999;
+  --rate-known-bg: #1A1A1A;
+  --rate-known-text: #FFFFFF;
+  --rate-known-border: #1A1A1A;
+  --btn-primary-bg: #1A1A1A;
+  --btn-primary-text: #FFFFFF;
+  --btn-primary-hover: #000000;
+  --btn-secondary-bg: transparent;
+  --btn-secondary-text: #1A1A1A;
+  --btn-secondary-border: #1A1A1A;
+  --link: #1A1A1A;
+  --link-visited: #4A4A4A;
+  --r-sm: 4px;
+  --r-md: 6px;
+  --r-lg: 8px;
+  --r-xl: 8px;
+  --sh-sm: 0 1px 2px rgba(0, 0, 0, 0.04);
+  --sh-md: 0 2px 8px rgba(0, 0, 0, 0.06);
+  --sh-lg: 0 4px 16px rgba(0, 0, 0, 0.08);
+  --sh-inset: none;
+  --font-display: var(--font-serif-en);
+  --font-heading: var(--font-kaiti-cn);
+  --font-body:    var(--font-serif-cn);
+  --font-meta:    var(--font-sans);
+  --font-num:     var(--font-serif-en);
+  --font-mono:    var(--font-mono);
+  --font-seal:    var(--font-zhuan);
+}
+
+[data-theme^="ink-"] {
+  --bg-page: #F5F1E8;
+  --bg-card: #FFFFFF;
+  --bg-card-2: #FAF6EE;
+  --primary: #1A1A1A;
+  --primary-dark: #000000;
+  --primary-light: #4A4A4A;
+  --accent: #8B2A1F;
+  --tab-active: #1A1A1A;
+  --tab-active-bg: rgba(26, 26, 26, 0.06);
+  --text-primary: #1A1A1A;
+  --text-secondary: #666666;
+  --text-muted: #999999;
+  --border: #E5E5E5;
+  --border-soft: #EEEEEE;
+  --btn-primary-bg: #1A1A1A;
+  --btn-primary-text: #FFFFFF;
+  --link: #1A1A1A;
+  --font-display: var(--font-serif-en);
+  --font-heading: var(--font-kaiti-cn);
+  --font-body: var(--font-serif-cn);
+  --font-meta: var(--font-sans);
+  --font-num: var(--font-serif-en);
+  --font-mono: var(--font-mono);
+  --font-seal: var(--font-zhuan);
+}

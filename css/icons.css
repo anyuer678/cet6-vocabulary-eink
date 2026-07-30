@@ -1,0 +1,141 @@
+/* =========================================================
+ * 图标使用样式 — 配合 icons-sprite.svg
+ * 4 项目统一规范
+ * ============================================================ */
+
+/* 引入 SVG sprite */
+.icon-sprite-host {
+  position: absolute;
+  width: 0;
+  height: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+/* 基础图标 SVG */
+.icon {
+  display: inline-block;
+  vertical-align: middle;
+  width: 24px;
+  height: 24px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  flex-shrink: 0;
+  color: var(--icon, var(--text-primary));
+}
+
+/* 尺寸变体 */
+.icon-xs { width: 16px; height: 16px; }
+.icon-sm { width: 20px; height: 20px; }
+.icon-md { width: 24px; height: 24px; }   /* 默认 */
+.icon-lg { width: 32px; height: 32px; }
+.icon-xl { width: 40px; height: 40px; }
+.icon-2xl { width: 56px; height: 56px; }
+.icon-3xl { width: 72px; height: 72px; }
+
+/* 颜色变体 */
+.icon-primary  { color: var(--primary); }
+.icon-accent   { color: var(--accent); }
+.icon-muted    { color: var(--icon-muted, var(--text-muted)); }
+.icon-inherit  { color: inherit; }
+.icon-on-dark  { color: var(--text-on-dark); }
+
+/* 描边粗细 */
+.icon-thin  { stroke-width: 1.2; }
+.icon-bold  { stroke-width: 2; }
+
+
+/* ============================================================
+ * 图标容器（用于首页网格 / TabBar）
+ * ============================================================ */
+
+.icon-tile {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--sp-2);
+  width: 80px;
+  height: 80px;
+  padding: var(--sp-2);
+  background: var(--bg-card);
+  border: var(--bw-1) solid var(--border-soft);
+  border-radius: var(--r-lg);
+  cursor: pointer;
+  transition: all var(--dur-base) var(--ease-out);
+  text-align: center;
+  -webkit-tap-highlight-color: transparent;
+}
+.icon-tile:hover  { background: var(--bg-card-2); transform: translateY(-2px); box-shadow: var(--sh-md); }
+.icon-tile:active { transform: translateY(0); }
+
+.icon-tile-icon {
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--bg-card-2);
+  border-radius: var(--r-md);
+  color: var(--primary);
+}
+.icon-tile-icon .icon { width: 22px; height: 22px; }
+
+.icon-tile-label {
+  font-family: var(--font-body);
+  font-size: var(--fs-xs);
+  color: var(--text-secondary);
+  line-height: var(--lh-tight);
+}
+
+
+/* ============================================================
+ * TabBar 图标容器
+ * ============================================================ */
+
+.tab-item .icon {
+  width: 24px;
+  height: 24px;
+  transition: color var(--dur-fast) var(--ease-out);
+}
+
+
+/* ============================================================
+ * 列表项前置图标
+ * ============================================================ */
+
+.list-item-leading .icon {
+  width: 22px;
+  height: 22px;
+  color: var(--text-secondary);
+}
+
+
+/* ============================================================
+ * TopBar 按钮图标
+ * ============================================================ */
+
+.topbar-btn .icon {
+  width: 22px;
+  height: 22px;
+}
+
+
+/* ============================================================
+ * 装饰性插画位（用于主页插画）
+ * ============================================================ */
+
+.illustration {
+  display: block;
+  width: 100%;
+  max-width: 280px;
+  height: auto;
+  margin: 0 auto;
+}
+
+.illustration-sm { max-width: 120px; }
+.illustration-md { max-width: 200px; }
+.illustration-lg { max-width: 320px; }

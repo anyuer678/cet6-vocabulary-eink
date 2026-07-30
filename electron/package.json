@@ -1,0 +1,46 @@
+{
+  "name": "cet6-vocabulary-eink",
+  "version": "1.1.0",
+  "description": "CET-6 Vocabulary Learning App - E-Ink Edition",
+  "author": "CET-6 Learner",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "build": "electron-builder --win portable",
+    "build:installer": "electron-builder --win"
+  },
+  "build": {
+    "appId": "com.cet6.vocabulary.eink",
+    "productName": "CET-6 词汇学习 (E-Ink版)",
+    "directories": {
+      "output": "dist-build"
+    },
+    "forceCodeSigning": false,
+    "win": {
+      "target": [
+        {
+          "target": "portable",
+          "arch": ["x64"]
+        }
+      ],
+      "signAndEditExecutable": false
+    },
+    "compression": "maximum",
+    "portable": {
+      "artifactName": "CET-6词汇学习-EInk版-便携版.exe"
+    },
+    "files": [
+      "main.js",
+      "preload.js",
+      "../index.html",
+      "../manifest.json",
+      "../sw.js"
+    ],
+    "asarUnpack": [],
+    "extraResources": []
+  },
+  "devDependencies": {
+    "electron": "33.2.1",
+    "electron-builder": "24.13.3"
+  }
+}

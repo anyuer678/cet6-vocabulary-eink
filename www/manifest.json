@@ -1,0 +1,44 @@
+{
+  "name": "CET-6 词汇学习系统",
+  "short_name": "CET-6 词汇",
+  "description": "英语六级词汇背诵系统 - 支持单词背诵、默写、回忆训练、错词管理",
+  "start_url": "/index.html",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#f1f5f9",
+  "theme_color": "#4f46e5",
+  "lang": "zh-CN",
+  "categories": ["education", "productivity"],
+  "scope": "/",
+  "prefer_related_applications": false,
+  "icons": [
+    {
+      "src": "public/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ],
+  "screenshots": [],
+  "shortcuts": [
+    {
+      "name": "开始背诵",
+      "short_name": "背诵",
+      "description": "开始单词背诵学习",
+      "url": "/index.html",
+      "icons": [{"src": "icon-192.png", "sizes": "192x192"}]
+    },
+    {
+      "name": "单词默写",
+      "short_name": "默写",
+      "description": "根据释义默写单词",
+      "url": "/index.html"
+    },
+    {
+      "name": "错词本",
+      "short_name": "错词",
+      "description": "查看错词本",
+      "url": "/index.html"
+    }
+  ]
+}

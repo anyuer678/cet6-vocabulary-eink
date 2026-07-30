@@ -1,0 +1,426 @@
+﻿/* === Word-Eink 预览版组件样式 === */
+
+.eink-page{
+  font-family:'Noto Serif SC','Cormorant Garamond',serif;
+  color:#000000;background:#ffffff;padding:0 2px;
+}
+
+.eink-top{
+  display:flex;justify-content:space-between;align-items:center;
+  padding:4px 0 6px;border-bottom:1px solid #000;
+  margin-bottom:8px;
+}
+
+.eink-date{
+  font-family:'Noto Serif SC',serif;font-size:12px;color:#000;
+  letter-spacing:0.02em;
+}
+
+.eink-tag-eink{
+  font-family:'Noto Serif SC',serif;font-size:10px;color:#000;
+  border:1px solid #000;padding:1px 5px;line-height:1.2;
+  font-weight:500;
+}
+
+.eink-section{
+  font-family:'Noto Sans SC',sans-serif;font-size:9px;color:#000;
+  letter-spacing:0.18em;text-transform:uppercase;
+  margin:8px 0 4px;font-weight:600;
+  border-left:3px solid #000;padding-left:5px;
+}
+
+.eink-word-block{
+  text-align:center;padding:6px 0 8px;
+}
+
+.eink-word{
+  font-family:'Cormorant Garamond',serif;font-size:28px;font-weight:600;
+  color:#000;line-height:1.1;letter-spacing:0.02em;
+}
+
+.eink-phonetic{
+  font-family:'JetBrains Mono',monospace;font-size:10px;color:#444;
+  margin:3px 0 5px;letter-spacing:0.05em;
+}
+
+.eink-divider{
+  height:1px;background:#000;margin:5px 25%;width:50%;
+}
+
+.eink-meaning{
+  font-family:'Noto Serif SC',serif;font-size:16px;color:#000;
+  line-height:1.6;margin:6px 0 3px;
+}
+
+.eink-eg{
+  font-family:'Cormorant Garamond',serif;font-style:italic;
+  font-size:14px;color:#444;line-height:1.5;margin-top:4px;
+}
+
+.eink-stats{
+  display:flex;border:1px solid #000;margin:8px 0;
+}
+
+.eink-stat{
+  flex:1;padding:5px 2px;text-align:center;
+  border-right:1px solid #000;
+}
+
+.eink-stat:last-child{ border-right: none; }
+
+.eink-stat-num{
+  font-family:'Cormorant Garamond',serif;font-size:14px;font-weight:600;
+  color:#000;line-height:1.1;
+}
+
+.eink-stat-lbl{
+  font-family:'Noto Sans SC',sans-serif;font-size:8px;color:#444;
+  letter-spacing:0.1em;margin-top:2px;
+}
+
+.eink-list{
+  border:1px solid #000;margin-bottom:8px;
+}
+
+.eink-row{
+  display:flex;justify-content:space-between;align-items:center;
+  padding:7px 8px;font-size:11px;color:#000;
+  border-bottom:1px solid #888;
+  min-height:32px;
+}
+
+.eink-row:last-child{ border-bottom: none; }
+
+.eink-row .eink-row-l{ display: flex; align-items: center; gap: 5px; }
+
+.eink-row .eink-row-l b{ font-weight: 500; }
+
+.eink-row .eink-row-r{ font-size:10px;color:#444;font-family:'JetBrains Mono',monospace; }
+
+.eink-actions{
+  display:flex;gap:5px;margin:8px 0;
+}
+
+.eink-btn{
+  flex:1;padding:7px 4px;font-size:11px;
+  font-family:'Noto Serif SC',serif;cursor:pointer;
+  background:transparent;border:1px solid #000;color:#000;
+  border-radius:0;letter-spacing:0.05em;min-height:32px;
+  transition:none;
+}
+
+.eink-btn-primary{ background:#000;color:#fff; }
+
+.eink-btn-outline{ background:#fff;color:#000; }
+
+.eink-progress-track{
+  height:3px;background:#ddd;margin:4px 0 6px;position:relative;
+  border:1px solid #000;
+}
+
+.eink-progress-fill{
+  height:100%;background:#000;
+}
+
+.eink-grid-3{
+  display:grid;grid-template-columns:repeat(3,1fr);gap:4px;
+  margin-bottom:8px;
+}
+
+.eink-grid-item{
+  border:1px solid #000;background:#fff;color:#000;
+  text-align:center;padding:10px 4px;
+  font-family:'Noto Serif SC',serif;font-size:11px;
+  min-height:44px;display:flex;align-items:center;justify-content:center;
+  cursor:pointer;
+}
+
+.eink-version{
+  text-align:center;padding:10px 0 8px;border-bottom:1px solid #000;
+  margin-bottom:8px;
+}
+
+.eink-version-name{
+  font-family:'Cormorant Garamond',serif;font-size:18px;font-weight:600;
+  color:#000;letter-spacing:0.05em;
+}
+
+.eink-version-sub{
+  font-family:'Noto Serif SC',serif;font-size:10px;color:#444;
+  letter-spacing:0.1em;margin-top:3px;
+}
+
+.eink-continue{
+  text-align:center;padding:8px 0 4px;
+  font-family:'Noto Serif SC',serif;font-size:11px;color:#000;
+  letter-spacing:0.15em;
+}
+
+.eink-mountain1{
+  position:absolute;bottom:0;left:0;width:100%;height:130px;
+  z-index:1;pointer-events:none;
+}
+
+.eink-mountain1::before{
+  content:'';position:absolute;bottom:0;left:0;width:100%;height:100%;
+  background:rgba(15,15,15,0.09);
+  clip-path:polygon(
+    0% 100%, 5% 55%, 12% 50%, 18% 65%, 25% 40%, 30% 52%,
+    38% 28%, 45% 42%, 50% 35%, 55% 48%, 62% 30%,
+    68% 44%, 75% 25%, 82% 40%, 88% 50%, 92% 38%, 100% 60%, 100% 100%
+  );
+  filter:blur(2.5px);
+}
+
+.eink-mountain1::after{
+  content:'';position:absolute;bottom:0;left:0;width:100%;height:60%;
+  background:rgba(30,30,30,0.06);
+  clip-path:polygon(
+    0% 100%, 10% 50%, 20% 62%, 35% 35%, 48% 52%,
+    60% 32%, 72% 44%, 85% 28%, 95% 45%, 100% 100%
+  );
+  filter:blur(2px);
+}
+
+.eink-mountain2{
+  position:absolute;bottom:0;left:0;width:60%;height:90px;
+  z-index:1;pointer-events:none;
+}
+
+.eink-mountain2::before{
+  content:'';position:absolute;bottom:0;left:0;width:100%;height:100%;
+  background:rgba(20,20,20,0.11);
+  clip-path:polygon(
+    0% 100%, 8% 60%, 18% 45%, 28% 55%, 38% 30%,
+    50% 42%, 62% 25%, 75% 38%, 88% 50%, 100% 70%, 100% 100%
+  );
+  filter:blur(2px);
+}
+
+.eink-bamboo{
+  position:absolute;bottom:0;right:8px;width:36px;height:140px;
+  z-index:2;pointer-events:none;
+}
+
+.eink-bamboo::before{
+  content:'';position:absolute;bottom:0;left:8px;
+  width:3px;height:100%;background:rgba(20,20,20,0.35);
+  border-radius:1.5px;
+  box-shadow:
+    /* 绔硅妭 */
+    0 60px 0 -1px rgba(20,20,20,0.3),
+    0 100px 0 -1px rgba(20,20,20,0.3);
+}
+
+.eink-bamboo::after{
+  content:'';position:absolute;top:8px;right:-2px;
+  width:18px;height:4px;
+  background:rgba(25,25,25,0.45);
+  border-radius:2px 80% 2px 2px;
+  transform:rotate(25deg);
+  box-shadow:
+    -6px 18px 0 -2px rgba(25,25,25,0.35),
+    -10px 18px 0 -2px rgba(25,25,25,0.3),
+    /* 绗簩缁?*/
+    12px 35px 0 -2px rgba(25,25,25,0.4),
+    18px 35px 0 -2px rgba(25,25,25,0.35),
+    /* 绗笁缁?*/
+    -4px 52px 0 -2px rgba(25,25,25,0.38),
+    -10px 52px 0 -2px rgba(25,25,25,0.3);
+}
+
+.eink-birds{
+  position:absolute;top:50px;right:50px;z-index:2;pointer-events:none;
+}
+
+.eink-birds::before{
+  content:'';position:absolute;width:10px;height:5px;
+  border-left:1.5px solid rgba(20,20,20,0.4);
+  border-bottom:1.5px solid rgba(20,20,20,0.4);
+  transform:rotate(-45deg);
+  top:0;right:0;
+}
+
+.eink-birds::after{
+  content:'';position:absolute;width:7px;height:3.5px;
+  border-left:1px solid rgba(20,20,20,0.3);
+  border-bottom:1px solid rgba(20,20,20,0.3);
+  transform:rotate(-40deg);
+  top:16px;right:12px;
+}
+
+.eink-mist{
+  position:absolute;left:0;width:100%;z-index:1;pointer-events:none;
+}
+
+.eink-mist-top{
+  top:60px;height:30px;
+  background:linear-gradient(180deg,
+    rgba(200,195,185,0.0) 0%,
+    rgba(180,175,165,0.08) 40%,
+    rgba(200,195,185,0.0) 100%);
+  filter:blur(8px);
+}
+
+.eink-mist-mid{
+  top:48%;height:36px;
+  background:linear-gradient(180deg,
+    transparent 0%,
+    rgba(190,185,175,0.06) 50%,
+    transparent 100%);
+  filter:blur(10px);
+}
+
+.eink-water{
+  position:absolute;bottom:48px;left:0;width:100%;height:18px;
+  z-index:1;pointer-events:none;
+  background:repeating-linear-gradient(0deg,
+    rgba(30,30,30,0) 0px,
+    rgba(30,30,30,0.04) 1px,
+    rgba(30,30,30,0) 3px,
+    rgba(30,30,30,0.06) 4px,
+    rgba(30,30,30,0) 5px,
+    rgba(30,30,30,0.03) 7px,
+    rgba(30,30,30,0) 9px,
+    rgba(30,30,30,0.05) 10px);
+}
+
+.eink-pine{
+  position:absolute;bottom:10px;left:6px;width:44px;height:100px;
+  z-index:2;pointer-events:none;
+}
+
+.eink-pine::before{
+  content:'';position:absolute;bottom:0;left:18px;
+  width:3px;height:40px;
+  background:rgba(30,30,30,0.25);
+  border-radius:1.5px;
+}
+
+.eink-pine::after{
+  content:'';position:absolute;bottom:28px;left:0;
+  width:0;height:0;
+  border-left:22px solid transparent;
+  border-right:22px solid transparent;
+  border-bottom:28px solid rgba(25,25,25,0.12);
+  filter:blur(1px);
+  box-shadow:
+    /* 绗簩灞?*/
+    0 -18px 0 -8px rgba(25,25,25,0.1),
+    0 -18px 0 -8px rgba(25,25,25,0.1),
+    /* 绗笁灞?*/
+    0 -32px 0 -16px rgba(25,25,25,0.08);
+}
+
+.eink-sun{
+  position:absolute;top:40px;left:30px;
+  width:28px;height:28px;
+  border-radius:50%;
+  z-index:1;pointer-events:none;
+  background:radial-gradient(circle,
+    rgba(180,170,160,0.25) 0%,
+    rgba(180,170,160,0.1) 40%,
+    transparent 70%);
+  filter:blur(1px);
+}
+
+.eink-signature{
+  position:absolute;bottom:56px;right:12px;
+  z-index:3;pointer-events:none;
+  display:flex;flex-direction:column;align-items:flex-end;
+  gap:3px;
+}
+
+.eink-signature::before{
+  content:'涔欏烦骞村';
+  font-family:'Noto Serif SC',serif;
+  font-size:7px;color:rgba(20,20,20,0.3);
+  letter-spacing:0.2em;
+}
+
+.eink-seal{
+  position:absolute;top:14px;right:10px;
+  width:38px;height:38px;
+  border:2px solid #8b1a1a;
+  display:flex;align-items:center;justify-content:center;
+  font-family:'Noto Serif SC',serif;
+  font-size:16px;font-weight:700;color:#8b1a1a;
+  background:rgba(255,250,240,0.55);
+  transform:rotate(-4deg);
+  z-index:4;letter-spacing:0;
+  box-shadow:inset 0 0 0 2px rgba(139,26,26,0.35), 0 1px 3px rgba(0,0,0,0.08);
+}
+
+.eink-seal::before{
+  content:'';position:absolute;inset:2px;
+  border:1px dashed rgba(139,26,26,0.35);
+}
+
+.eink-seal.tl{ top:14px; left:10px; right:auto; }
+
+.eink-ink-dot{
+  position:absolute;width:7px;height:7px;
+  background:radial-gradient(circle,
+    rgba(20,20,20,0.65) 25%,
+    rgba(40,40,40,0.3) 55%,
+    transparent 80%);
+  border-radius:50%;z-index:2;pointer-events:none;
+  filter:blur(0.4px);
+}
+
+.eink-ink-dot.lg{ width:9px;height:9px; }
+
+.eink-ink-dot.sm{ width:3px;height:3px; }
+
+.eink-ink-dot.tl{ top:14px;left:8px; }
+
+.eink-ink-dot.tr{ top:30px;right:14px; }
+
+.eink-ink-dot.bl{ bottom:90px;left:14px; }
+
+.eink-ink-dot.br{ bottom:120px;right:8px;opacity:0.5; }
+
+.eink-ink-dot.mid{ top:50%;left:6px;opacity:0.4; }
+
+.eink-ink-dot.mid2{ top:62%;right:6px;opacity:0.5; }
+
+.eink-brush-divider{
+  height:3px;margin:6px 0;
+  background:linear-gradient(90deg,
+    transparent 0%,
+    rgba(20,20,20,0.7) 5%,
+    rgba(20,20,20,0.85) 20%,
+    rgba(20,20,20,0.55) 50%,
+    rgba(20,20,20,0.85) 80%,
+    rgba(20,20,20,0.5) 95%,
+    transparent 100%);
+  position:relative;
+}
+
+.eink-brush-divider::before{
+  content:'';position:absolute;left:2%;top:0.5px;
+  width:96%;height:1px;background:rgba(20,20,20,0.35);
+  filter:blur(0.5px);
+}
+
+.eink-page{
+  background: transparent;
+  color:#000;
+}
+
+/* E-Ink 版装饰线 — 简洁克制 */
+body[data-theme="eink"]::after,
+body[data-theme^="solid-"]::after,
+body[data-theme^="ink-"]::after {
+  content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
+  background:
+    linear-gradient(90deg, transparent 48.5%, rgba(0,0,0,0.04) 49%, rgba(0,0,0,0.04) 51%, transparent 51.5%),
+    repeating-linear-gradient(0deg, transparent, transparent 30px, rgba(0,0,0,0.03) 30px, rgba(0,0,0,0.03) 31px);
+}
+body[data-theme="eink"]::before {
+  content:'';position:fixed;top:12px;left:5%;width:90%;height:1px;
+  background:rgba(0,0,0,0.08);pointer-events:none;z-index:0;
+  box-shadow:0 calc(100vh - 25px) 0 0 rgba(0,0,0,0.08);
+}
+
+

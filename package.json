@@ -1,0 +1,25 @@
+{
+  "name": "cet6-vocabulary-app",
+  "version": "1.1.0",
+  "description": "CET-6 Vocabulary Learning App - 英语六级词汇背诵系统（E-Ink版）",
+  "main": "index.html",
+  "scripts": {
+    "start": "npx http-server . -p 8082",
+    "dev": "npm start",
+    "build:www": "echo web files already at root",
+    "build:apk": "node scripts/build-eink.js build",
+    "build:exe": "cd electron && npm run build",
+    "build:all": "npm run build:apk && npm run build:exe",
+    "electron:start": "cd electron && electron .",
+    "electron:build": "cd electron && npx electron-builder --win portable",
+    "cap:sync": "node scripts/build-eink.js sync",
+    "cap:open": "npx cap open android"
+  },
+  "devDependencies": {
+    "@capacitor/android": "^6.0.0",
+    "@capacitor/cli": "^6.0.0",
+    "@capacitor/core": "^6.0.0",
+    "@capacitor/status-bar": "^6.0.0",
+    "@capacitor/splash-screen": "^6.0.0"
+  }
+}

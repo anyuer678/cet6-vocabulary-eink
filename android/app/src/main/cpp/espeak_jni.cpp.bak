@@ -1,0 +1,125 @@
+// JNI bridge for eSpeak-ng (eink version)
+#include <jni.h>
+#include <android/log.h>
+#include <dlfcn.h>
+#include <string>
+#include <vector>
+#include <mutex>
+
+#define LOG_TAG "ESpeakJni"
+#define LOGE(...) __android_log_print(ANDROID_LOG_ERROR, LOG_TAG, __VA_ARGS__)
+#define LOGI(...) __android_log_print(ANDROID_LOG_INFO, LOG_TAG, __VA_ARGS__)
+
+typedef int  (*fn_Init)(int output, int buflength, const char *path, int options);
+typedef void (*fn_SetSynthCb)(void *cb);
+typedef void (*fn_SetVoiceByName)(const char *name);
+typedef int  (*fn_SetParameter)(int parameter, int value, int relative);
+typedef int  (*fn_Synth)(const void *text, size_t size, unsigned int position,
+                         int position_type, unsigned int end_position,
+                         unsigned int flags, unsigned int *unique_identifier,
+                         void *user_data);
+typedef int  (*fn_Synchronize)(void);
+typedef void (*fn_Terminate)(void);
+
+static void *g_handle = NULL;
+static fn_Init            pInit = NULL;
+static fn_SetSynthCb      pSetCb = NULL;
+static fn_SetVoiceByName  pSetVoice = NULL;
+static fn_SetParameter    pSetParam = NULL;
+static fn_Synth           pSynth = NULL;
+static fn_Synchronize     pSync = NULL;
+static fn_Terminate       pTerm = NULL;
+static int g_sampleRate = 22050;
+
+static std::vector<short> g_buf;
+static std::mutex g_mtx;
+
+static int synth_cb(short *wav, int numsamples, void *) {
+    if (wav == NULL || numsamples <= 0) return 0;
+    std::lock_guard<std::mutex> lock(g_mtx);
+    g_buf.insert(g_buf.end(), wav, wav + numsamples);
+    return 0;
+}
+
+extern "C" JNIEXPORT jint JNICALL
+Java_com_cet6_vocabulary_eink_ESpeakTts_nativeInit(JNIEnv *env, jclass, jstring jDataPath) {
+    if (g_handle == NULL) {
+        g_handle = dlopen("libespeak-ng.so", RTLD_NOW | RTLD_LOCAL);
+        if (g_handle == NULL) { LOGE("dlopen failed: %s", dlerror()); return -1; }
+        pInit     = (fn_Init)         dlsym(g_handle, "espeak_Initialize");
+        pSetCb    = (fn_SetSynthCb)   dlsym(g_handle, "espeak_SetSynthCallback");
+        pSetVoice = (fn_SetVoiceByName)dlsym(g_handle, "espeak_SetVoiceByName");
+        pSetParam = (fn_SetParameter) dlsym(g_handle, "espeak_SetParameter");
+        pSynth    = (fn_Synth)        dlsym(g_handle, "espeak_Synth");
+        pSync     = (fn_Synchronize)  dlsym(g_handle, "espeak_Synchronize");
+        pTerm     = (fn_Terminate)    dlsym(g_handle, "espeak_Terminate");
+        if (!pInit || !pSetCb || !pSetVoice || !pSetParam || !pSynth || !pSync || !pTerm) {
+            LOGE("dlsym incomplete"); dlclose(g_handle); g_handle = NULL; return -2;
+        }
+    }
+    const char *path = env->GetStringUTFChars(jDataPath, NULL);
+    int sr = pInit(1, 0, path, 0);
+    env->ReleaseStringUTFChars(jDataPath, path);
+    if (sr <= 0) { LOGE("espeak_Initialize failed: %d", sr); return -3; }
+    g_sampleRate = sr;
+    pSetCb((void*)synth_cb);
+    LOGI("eSpeak init OK, sr=%d", sr);
+    return 0;
+}
+
+extern "C" JNIEXPORT void JNICALL
+Java_com_cet6_vocabulary_eink_ESpeakTts_nativeSetVoice(JNIEnv *env, jclass, jstring jName) {
+    if (!pSetVoice) return;
+    const char *n = env->GetStringUTFChars(jName, NULL);
+    pSetVoice(n);
+    env->ReleaseStringUTFChars(jName, n);
+}
+
+extern "C" JNIEXPORT jint JNICALL
+Java_com_cet6_vocabulary_eink_ESpeakTts_nativeSetRate(JNIEnv *, jclass, jint rate) {
+    if (!pSetParam) return -1;
+    pSetParam(1, (int)rate, 0);
+    return 0;
+}
+
+extern "C" JNIEXPORT jint JNICALL
+Java_com_cet6_vocabulary_eink_ESpeakTts_nativeGetSampleRate(JNIEnv *, jclass) {
+    return g_sampleRate;
+}
+
+extern "C" JNIEXPORT jstring JNICALL
+Java_com_cet6_vocabulary_eink_ESpeakTts_nativeInfo(JNIEnv *env, jclass) {
+    char buf[64];
+    snprintf(buf, sizeof(buf), "espeak sr=%d", g_sampleRate);
+    return env->NewStringUTF(buf);
+}
+
+extern "C" JNIEXPORT jint JNICALL
+Java_com_cet6_vocabulary_eink_ESpeakTts_nativeSynth(JNIEnv *env, jclass,
+        jbyteArray jText, jshortArray jOut, jint maxSamples) {
+    if (!pSynth || !pSync) return 0;
+    jsize len = env->GetArrayLength(jText);
+    jbyte *txt = env->GetByteArrayElements(jText, NULL);
+    { std::lock_guard<std::mutex> lock(g_mtx); g_buf.clear(); }
+    char *buf = new char[len + 1];
+    memcpy(buf, txt, len);
+    buf[len] = '\0';
+    env->ReleaseByteArrayElements(jText, txt, JNI_ABORT);
+    pSynth(buf, (size_t)(len + 1), 0, 1, 0, 1, NULL, NULL);
+    delete[] buf;
+    pSync();
+    std::vector<short> local;
+    { std::lock_guard<std::mutex> lock(g_mtx); local.swap(g_buf); }
+    int n = (int)local.size();
+    if (n > maxSamples) n = maxSamples;
+    if (n > 0) env->SetShortArrayRegion(jOut, 0, n, local.data());
+    return n;
+}
+
+extern "C" JNIEXPORT void JNICALL
+Java_com_cet6_vocabulary_eink_ESpeakTts_nativeTerminate(JNIEnv *, jclass) {
+    if (pTerm) pTerm();
+    if (g_handle) { dlclose(g_handle); g_handle = NULL; }
+    pInit = NULL; pSetCb = NULL; pSetVoice = NULL;
+    pSetParam = NULL; pSynth = NULL; pSync = NULL; pTerm = NULL;
+}

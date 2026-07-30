@@ -1,0 +1,68 @@
+/* 预览版主题增强 - 纸纹背景 + 暖色调 */
+:root {
+  /* 米色纸纹默认背景 */
+  --page-bg: #faf8f2;
+  --card-bg: rgba(255,255,255,0.85);
+  --card-border: rgba(0,0,0,0.06);
+  --card-shadow: 0 1px 3px rgba(0,0,0,0.04);
+  --surface-bg: rgba(255,255,255,0.7);
+  --surface-blur: blur(12px);
+  --text-primary: #2c2416;
+  --text-secondary: #6b5f4a;
+  --text-muted: #9a8d7a;
+}
+
+/* 暗色主题补充 */
+[data-theme="todolist-dark"] {
+  --page-bg: #1a1814;
+  --card-bg: rgba(30,28,24,0.9);
+  --card-border: rgba(255,255,255,0.06);
+  --text-primary: #e8e0d0;
+  --text-secondary: #a09880;
+  --text-muted: #6a6250;
+}
+
+/* 纸纹背景(可用于 body 或 .app) */
+.bg-paper-1{background:#faf8f2 url("data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 width=%27100%27 height=%27100%27%3E%3Cfilter id=%27noise%27%3E%3CfeTurbulence type=%27fractalNoise%27 baseFrequency=%270.65%27 numOctaves=%273%27 stitchTiles=%27stitch%27/%3E%3C/filter%3E%3Crect width=%27100%27 height=%27100%27 filter=%27url(%23noise)%27 opacity=%270.03%27/%3E%3C/svg%3E");}
+
+/* 毛玻璃面板 */
+.glass-panel {
+  background: rgba(255,255,255,0.7);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(0,0,0,0.06);
+  border-radius: 16px;
+}
+
+/* 底部导航增强 */
+.bottom-nav-enhanced {
+  background: rgba(255,255,255,0.92);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-top: 1px solid rgba(0,0,0,0.06);
+  padding: 4px 0 env(safe-area-inset-bottom, 8px) 0;
+}
+
+/* TabBar活跃态 - 暖色调 */
+.nav-active-warm {
+  color: #5a6b3a;
+  font-weight: 600;
+}
+
+/* 卡片悬停微动 */
+.card-hover:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  transition: all 0.15s ease;
+}
+
+/* 墨水屏辅助 */
+.eink-body {
+  filter: grayscale(1);
+  background: #f5f0e8 !important;
+}
+.eink-body * {
+  color-adjust: economy;
+}
+
+

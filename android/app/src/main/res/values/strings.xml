@@ -1,0 +1,7 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">CET-6 词汇学习·墨水屏</string>
+    <string name="title_activity_main">CET-6 词汇学习·墨水屏</string>
+    <string name="package_name">com.cet6.vocabulary.eink</string>
+    <string name="custom_url_scheme">com.cet6.vocabulary.eink</string>
+</resources>

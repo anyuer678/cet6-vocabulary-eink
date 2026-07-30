@@ -1,0 +1,5 @@
+cmake_minimum_required(VERSION 3.10.2)
+project("espeak_jni")
+add_library(espeak_jni SHARED espeak_jni.cpp)
+find_library(log-lib log)
+target_link_libraries(espeak_jni ${log-lib} dl)
