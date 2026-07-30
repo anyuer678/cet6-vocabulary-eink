@@ -1,5 +1,8 @@
 # CET-6 Vocabulary · 墨水屏版
 
+[![GitHub Pages](https://img.shields.io/badge/%F0%9F%8C%90-%E5%9C%A8%E7%BA%BF%E9%A2%84%E8%A7%88-2ea44f)](https://anyuer678.github.io/cet6-vocabulary-eink/)
+> ⚠️ **在线预览功能受限**：TTS 离线发音引擎、IndexedDB 持久化存储等功能在 GitHub Pages 静态环境下受限。建议下载安装包以获得完整体验。
+
 **E-Ink 电子墨水屏优化版** — 最终版
 
 针对 E-Ink 墨水屏设备优化的 CET-6 词汇学习应用，去除彩色动画和动效，保留完整学习功能，提供低功耗、护眼的阅读体验。
